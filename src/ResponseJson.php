@@ -45,9 +45,10 @@ trait ResponseJson
 	private function template(int $code, string $message, array $data)
 	{
 		$this->package = [
-			'code' 	=> $code,
-			'msg' 	=> $message,
-			'data' 	=> $data,
+			'code' 		=> $code,
+			'msg' 		=> $message,
+			'data' 		=> $data,
+			'trace_id' 	=> uuid_create(),
 		];
 		return response()
 			->json($this->package)
