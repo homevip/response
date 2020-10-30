@@ -35,6 +35,31 @@ trait ResponseJson
 
 
 	/**
+	 * 唯一的(16进制)数字串
+	 *
+	 * @return void
+	 */
+	private function trace_id()
+	{
+		if (!function_exists('uuid_create')) {
+			return sprintf(
+				'%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+				mt_rand(0, 0xffff),
+				mt_rand(0, 0xffff),
+				mt_rand(0, 0xffff),
+				mt_rand(0, 0x0fff) | 0x4000,
+				mt_rand(0, 0x3fff) | 0x8000,
+				mt_rand(0, 0xffff),
+				mt_rand(0, 0xffff),
+				mt_rand(0, 0xffff)
+			);
+		} else {
+			return uuid_create();
+		}
+	}
+
+
+	/**
 	 * 返回数据模板
 	 *
 	 * @param [type] $code		错误码
@@ -48,7 +73,7 @@ trait ResponseJson
 			'code' 		=> $code,
 			'msg' 		=> $message,
 			'data' 		=> $data,
-			'trace_id' 	=> uuid_create(),
+			'trace_id' 	=> $this->trace_id(),
 		];
 		return response()
 			->json($this->package)
